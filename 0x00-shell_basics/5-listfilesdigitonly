@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -l -n --show-all
+ls -l -n -la

@@ -1,2 +1,2 @@
 #!/bin/bash
-ls ./ ../ /bool -a
+ls ./ ../ /bool -la

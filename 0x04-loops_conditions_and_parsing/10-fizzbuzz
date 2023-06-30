@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# This script displays "Best School" 10 times using an until loop
+# This script executes the FizzBuzz logic for numbers from 1 to 100.
 for i in {1..100}; do
     fb3=$(( i % 3 ))
     fb5=$(( i % 5 ))

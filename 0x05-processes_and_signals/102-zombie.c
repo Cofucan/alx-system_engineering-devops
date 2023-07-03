@@ -33,10 +33,10 @@ int main(void)
 		if (pid <= 0)
 			exit(0);
 
-        printf("Zombie process created, PID: %d\n", pid);
-        sleep(1);
+		printf("Zombie process created, PID: %d\n", pid);
+		sleep(1);
 
-        count++;
+		count++;
 	}
 
 	infinite_while();

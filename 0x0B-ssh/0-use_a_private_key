@@ -2,7 +2,7 @@
 # This script connects to a remote server using ssh
 
 server_ip="34.234.201.201"
-private_key=~/.ssh/school
-remote_user=ubuntu
+private_key="~/.ssh/school"
+remote_user="ubuntu"
 
-ssh -i "$private_key" "$remote_user"@"$server_ip"
+ssh -i $private_key $remote_user@$server_ip

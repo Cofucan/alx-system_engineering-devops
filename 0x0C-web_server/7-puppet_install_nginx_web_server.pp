@@ -1,27 +1,13 @@
-# Installs and configures Nginx web server
+# Installs and configures Nginx web server with a redirect
 
-package { 'nginx':
-  ensure => installed,
-}
-
-file { '/var/www/html/index.nginx-debian.html':
-  content => 'Hello World!',
-}
-
-file { '/etc/nginx/sites-enabled/default':
-  ensure  => present,
-  content => "server {
-    listen 80;
-    listen [::]:80 default_server;
-    location /redirect_me {
-        return 301 https://www.github.com/Cofucan;
-    }
-  }",
-  notify  => Service['nginx'],
-}
-
-service { 'nginx':
-  ensure    => running,
-  enable    => true,
-  subscribe => File['/etc/nginx/sites-enabled/default'],
+exec { 'nginx_server':
+  command => [
+    '/usr/bin/apt-get', '-y', 'update',
+    '/usr/bin/apt-get', '-y', 'install', 'nginx',
+    '/bin/echo', 'Hello World!', '>', '/var/www/html/index.nginx-debian.html',
+    '/bin/bash', '-c', 'redir="\\trewrite ^/redirect_me https://www.github.com/Cofucan permanent;"; /bin/sed -i "/listen 80 default_server/a $redir" /etc/nginx/sites-available/default',
+    '/usr/sbin/service', 'nginx', 'restart'
+  ],
+  path    => ['/usr/bin', '/bin', '/usr/sbin'],
+  require => Package['nginx'],
 }

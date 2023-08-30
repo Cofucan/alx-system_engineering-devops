@@ -15,5 +15,13 @@ printf %s "server {
 }" > /etc/nginx/sites-enabled/default
 
 printf "Ceci n'est pas une page\n" > /var/www/html/404.html
-sudo sed -i "56i error_page 404 /404.html;\n\tlocation = /404.html {\n\t\tinternal;\n\t}\n" /etc/nginx/sites-available/default
+
+printf %s "server {
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+}" > /etc/nginx/sites-enabled/default
+
+# sudo sed -i "56i error_page 404 /404.html;\n\tlocation = /404.html {\n\t\tinternal;\n\t}\n" /etc/nginx/sites-available/default
 sudo service nginx restart

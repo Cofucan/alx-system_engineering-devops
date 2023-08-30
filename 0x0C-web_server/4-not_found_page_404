@@ -1,4 +1,4 @@
-!/usr/bin/env bash
+#!/usr/bin/env bash
 # Bash script that configures an Nginx server so have
 # custom 404 page with a custom text
 

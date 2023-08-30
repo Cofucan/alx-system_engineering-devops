@@ -1,17 +1,27 @@
-# Installs a Nginx web server
+# Installs and configures Nginx web server
 
-exec { 'nginx server':
-  provider => shell,
-  command  => '
-    sudo apt-get -y update;
-    sudo apt-get -y install nginx;
-    echo "Hello World!" > /var/www/html/index.nginx-debian.html;
-    printf %s "server {
-      listen 80;
-      listen [::]:80 default_server;
-      location /redirect_me {
-          return 301 https://www.github.com/Cofucan;
-      }
-    }" > /etc/nginx/sites-enabled/default;
-    sudo service nginx restart',
+package { 'nginx':
+  ensure => installed,
+}
+
+file { '/var/www/html/index.nginx-debian.html':
+  content => 'Hello World!',
+}
+
+file { '/etc/nginx/sites-enabled/default':
+  ensure  => present,
+  content => "server {
+    listen 80;
+    listen [::]:80 default_server;
+    location /redirect_me {
+        return 301 https://www.github.com/Cofucan;
+    }
+  }",
+  notify  => Service['nginx'],
+}
+
+service { 'nginx':
+  ensure    => running,
+  enable    => true,
+  subscribe => File['/etc/nginx/sites-enabled/default'],
 }

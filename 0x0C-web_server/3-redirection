@@ -4,13 +4,28 @@
 
 sudo apt-get -y update
 sudo apt-get -y install nginx
-echo "Hello World!" > /var/www/html/index.nginx-debian.html
-# redir="\\\trewrite ^/redirect_me https://www.github.com/Cofucan permanent;"
-# sudo sed -i "/listen 80 default_server/a $redir" /etc/nginx/sites-available/default
 
+# Create a custom file that will be rendered as the index of the server
+echo "Hello World!" > /var/www/html/uche.html
+
+# Check if the backup file exists for the original `default` file.
+# This is meant to back up the file once the first time, after installing nginx.
+if [ ! -f /etc/nginx/sites-available/default.bak ]; then
+    sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
+fi
+
+if [ ! -f /etc/nginx/sites-available/default.bak ]; then
+    sudo cp /etc/nginx/sites-enabled/default /etc/nginx/sites-enabled/default.bak
+fi
+
+# This modifies the `default` file, that is why I backed it up first
 printf %s "server {
     listen 80;
     listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html uche.html;
+
     location /redirect_me {
         return 301 https://www.github.com/Cofucan;
     }

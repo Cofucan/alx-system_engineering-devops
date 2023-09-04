@@ -5,7 +5,7 @@
 sudo apt-get -y update
 sudo apt-get -y install nginx
 
-# Create a custom file that will be rendered as the index of the server
+# Create a index file
 echo "Hello World!" > /var/www/html/uche.html
 
 # Check if the backup file exists for the original `default` file.

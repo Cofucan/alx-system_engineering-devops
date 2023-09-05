@@ -9,7 +9,7 @@ sudo apt-get -y install nginx
 echo "Hello World!" > /var/www/html/uche.html
 
 # Create a custom 404 page
-echo "Ceci n'est pas une page\n" > /var/www/html/404.html
+echo -e "Ceci n'est pas une page\n" > /var/www/html/404.html
 
 # Check if the backup file exists for the original `default` file.
 # This is meant to back up the file once the first time, after installing nginx.

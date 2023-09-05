@@ -8,7 +8,7 @@ package { 'nginx':
 # Create a custom index page
 file { '/var/www/html/uche.html':
   ensure  => 'file',
-  content => 'Hello World!',
+  content => 'Hello World!\n',
   owner   => 'www-data',
   group   => 'www-data',
   mode    => '0644',

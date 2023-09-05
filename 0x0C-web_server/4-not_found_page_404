@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Bash script that configures an Nginx server so have
-# custom 404 page with a custom text
+# Bash script that configures an Nginx server to have custom 404 page with a custom text
 
 sudo apt-get -y update
 sudo apt-get -y install nginx
@@ -10,21 +9,22 @@ echo "Hello World!" > /var/www/html/uche.html
 
 # Create a custom 404 page
 # echo -e "Ceci n'est pas une page\n" > /var/www/html/404.html
-sudo echo -e "Ceci n'est pas une page\n" | tee /var/www/html/404.html
-# echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html > /dev/null
+# sudo echo -e "Ceci n'est pas une page\n" | tee /var/www/html/404.html
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html > /dev/null
 
 # Check if the backup file exists for the original `default` file.
 # This is meant to back up the file once the first time, after installing nginx.
-if [ ! -f /etc/nginx/sites-available/default.bak ]; then
-    sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
-fi
+# if [ ! -f /etc/nginx/sites-available/default.bak ]; then
+#     sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
+# fi
+# 
+# if [ ! -f /etc/nginx/sites-enabled/default.bak ]; then
+#     sudo cp /etc/nginx/sites-enabled/default /etc/nginx/sites-enabled/default.bak
+# fi
 
-if [ ! -f /etc/nginx/sites-enabled/default.bak ]; then
-    sudo cp /etc/nginx/sites-enabled/default /etc/nginx/sites-enabled/default.bak
-fi
-
-# This modifies the `default` file, that is why I backed it up first
-printf %s "server {
+# Modify the `default` file to add your server block configuration
+sudo bash -c 'cat <<EOL > /etc/nginx/sites-enabled/default
+server {
     listen 80;
     listen [::]:80 default_server;
 
@@ -40,6 +40,7 @@ printf %s "server {
         root /var/www/html/;
         internal;
     }
-}" > /etc/nginx/sites-enabled/default
+}
+EOL'
 
 sudo service nginx restart

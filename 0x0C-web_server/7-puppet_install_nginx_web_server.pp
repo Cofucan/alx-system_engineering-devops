@@ -22,7 +22,7 @@ file { '/etc/nginx/sites-enabled/default':
     listen [::]:80 default_server;
 
     root /var/www/html;
-    index index.html index.htm index.nginx-debian.html uche.html;
+    index uche.html index.html index.htm index.nginx-debian.html;
 
     location /redirect_me {
         return 301 https://www.github.com/Cofucan;

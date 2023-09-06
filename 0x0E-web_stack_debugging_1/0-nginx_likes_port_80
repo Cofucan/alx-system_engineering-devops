@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 # This bash script modifies the `default` config file of an Nginx server to be able to listen on port 80
 
-# Path to the Nginx configuration file
-nginx_conf="/etc/nginx/sites-enabled/default"
+# Path to the Nginx configuration files
+nginx_aval="/etc/nginx/sites-available/default"
+nginx_enab="/etc/nginx/sites-enabled/default"
 
-# Replace the "listen 8080;" line
-sed -i 's/^\s*listen 8080;/\tlisten 80;/g' "$nginx_conf"
+# Replace port 8080 with 80
+sed -i 's/8080/80/g' "$nginx_aval"
+sed -i 's/8080/80/g' "$nginx_enab"
 
-# Replace the "listen [::]:8080 default_server ipv6only=on;" line
-sed -i 's/^\s*listen \[::\]:8080 default_server ipv6only=on;/\tlisten [::]:80 default_server ipv6only=on;/g' "$nginx_conf"
+# Remove all appearance of `ipv6only=on`
+sed -i 's/ ipv6only=on//g' "$nginx_aval"
+sed -i 's/ ipv6only=on//g' "$nginx_enab"
 
 # Restart nginx
 service nginx restart

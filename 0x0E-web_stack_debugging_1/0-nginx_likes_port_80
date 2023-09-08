@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # This bash script modifies the `default` config file of an Nginx server to be able to listen on port 80
 
-# Path to the Nginx configuration files
-nginx_enab="/etc/nginx/sites-enabled/default"
+# Remove the buggy default file
+rm /etc/nginx/sites-enabled/default
 
-# Replace port 8080 with 80
-sed -i 's/8080/80/g' "$nginx_enab"
+# Create a symbolic link to the correct default file
+ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 # Restart nginx
 service nginx restart

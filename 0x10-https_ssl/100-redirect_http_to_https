@@ -7,7 +7,6 @@ global
         user haproxy
         group haproxy
         daemon
-
         tune.ssl.default-dh-param 2048
 
         # Default SSL material locations
@@ -17,7 +16,6 @@ global
         # See: https://ssl-config.mozilla.org/#server=haproxy&server-version=2.0.3&config=intermediate
         ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
         ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
-        ssl-dh-param-file /etc/haproxy/dhparams.pem
         ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets
 
 defaults
@@ -36,12 +34,17 @@ defaults
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
 
-listen 228652-lb-01
+frontend cofucan-frontend
         bind *:80
-        bind *:443 ssl crt /etc/letsencrypt/live/www.cofucan.tech/cofucan.pem
-        mode http
-        redirect scheme https code 301 if !{ ssl_fc }
-        balance roundrobin
-        option forwardfor
-        server 228652-web-01 52.91.156.244 check
-        server 228652-web-02 100.25.171.126 check
+		bind *:443 ssl crt /etc/ssl/certs/cofucan_ssl.pem
+
+        # Redirect if HTTPS is not used
+		http-request add-header X-Forwarded-Proto https
+        # redirect scheme https code 301 if !{ ssl_fc }
+
+		default_backend cofucan-backend
+
+backend cofucan-backend
+		balance roundrobin
+		server 246683-web-01 34.234.201.201:80 check
+		server 246683-web-02 52.3.249.208:80 check

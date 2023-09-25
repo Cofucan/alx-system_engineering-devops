@@ -1,10 +1,9 @@
 #!/usr/bin/python3
 """ Rest API script that gathers data from an API. """
 import json
+import sys
 import urllib
 import urllib.request
-import sys
-
 
 # The base API url for getting the employee object
 USER_API_URL = "https://jsonplaceholder.typicode.com/users/"

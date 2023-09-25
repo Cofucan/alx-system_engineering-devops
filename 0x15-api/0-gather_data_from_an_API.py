@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """ Rest API script that gathers data from an API. """
 import json
 import urllib

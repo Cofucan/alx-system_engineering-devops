@@ -3,9 +3,8 @@
 This script fetches response from an API and exports data in CSV format
 """
 import json
-import sys
-
 import requests
+import sys
 
 
 def export_todos_to_json(employee_id):

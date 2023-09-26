@@ -1,39 +1,67 @@
 #!/usr/bin/python3
-""" Rest API script that gathers data from an API and exports it to a JSON """
+"""
+This script fetches response from an API and exports data in CSV format
+"""
 import json
 import sys
-import urllib
-import urllib.request
 
-# The base API url for getting the employee object
-USER_API_URL = "https://jsonplaceholder.typicode.com/users/"
+import requests
 
-# Employee ID passed as an argument to the script
-emp_id: str = sys.argv[1] if len(sys.argv) > 1 else ""
 
-# Get all the todos for a given employee ID
-if emp_id.isdigit():
+def export_todos_to_json(employee_id):
+    """
+    Returns info about an employee's TODO list progress
+    """
+    id_endpoint = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
+    todos_endpoint = f"{id_endpoint}/todos"
+
     try:
-        user_url = f"{USER_API_URL}{emp_id}"
-        todos_url = f"{user_url}/todos"
+        # Get user's data
+        response = requests.get(id_endpoint, timeout=10)
+        user_data = response.json()
+        username = user_data.get('username')
 
-        emp_response = urllib.request.urlopen(user_url)
-        todos_response = urllib.request.urlopen(todos_url)
+        # Get tasks data
+        response = requests.get(todos_endpoint, timeout=10)
+        todos = response.json()
 
-        emp_data = emp_response.read()
-        todos_data = todos_response.read()
+        # Create a dictionary to store data
+        todos_dict = {
+            employee_id: []
+        }
 
-        employee = json.loads(emp_data)
-        todos = json.loads(todos_data)
+        # Populate the dictionary
+        for todo in todos:
+            task_completed_status = todo.get('completed')
+            task_title = todo.get('title')
+            todos_dict[employee_id].append({
+                "task": task_title,
+                "completed": task_completed_status,
+                "username": username
+            })
 
-        with open(f"{emp_id}.json", "w", encoding='utf-8') as json_file:
-            json.dump({emp_id: [{
-                "task": todo.get("title"),
-                "completed": todo.get("completed"),
-                "username": todo.get("username")
-            } for todo in todos]}, json_file)
+        # Export data to JSON file
+        json_filename = employee_id + ".json"
+        with open(json_filename, 'w', encoding='utf-8') as json_file:
+            json.dump(todos_dict, json_file)
 
-    except urllib.error.URLError as err:
-        print(f"An error occurred: {err}")
+        print("Data has been exported to " + json_filename)
+
     except json.JSONDecodeError as err:
         print(f"Error decoding JSON: {err}")
+    except Exception:
+        print("Something went wrong.")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <employee_id>")
+        sys.exit(1)
+
+    # check if input is an integer
+    ID = sys.argv[1]
+    if not ID.isdigit():
+        print("Usage: python script.py <employee_id>")
+        sys.exit(1)
+
+    export_todos_to_json(ID)

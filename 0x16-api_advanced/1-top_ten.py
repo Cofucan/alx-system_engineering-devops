@@ -14,7 +14,9 @@ def top_ten(subreddit: str) -> None:
         None
     """
     base_url = 'https://www.reddit.com/r/{}/hot.json'.format(subreddit)
-    request = requests.get(base_url, headers={'User-Agent': 'Agent Uche'})
+    request = requests.get(
+        base_url, headers={'User-Agent': 'Agent Uche'}, allow_redirects=False
+    )
     data = request.json()
     try:
         for i in range(10):

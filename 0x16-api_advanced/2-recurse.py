@@ -46,4 +46,4 @@ def recurse(subreddit, hot_list=[], after=None, max_pages=None):
             subreddit, hot_list, after=next_page, max_pages=max_pages
         )
 
-    return hot_list
+    return hot_list if len(hot_list) > 0 else None
